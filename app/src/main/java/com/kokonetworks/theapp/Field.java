@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,8 +13,8 @@ import androidx.core.content.ContextCompat;
 
 class Field extends LinearLayout {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
-    private SquareButton[] holes = new SquareButton[9];
-    private int currentHole;
+    private final SquareButton[] circles = new SquareButton[9];
+    private int currentCircle;
     private Listener listener;
 
     private int score;
@@ -43,23 +42,23 @@ class Field extends LinearLayout {
         initializeViews(context);
     }
 
-    public int totalHoles() {
-        return holes.length;
+    public int totalCircles() {
+        return circles.length;
     }
 
     private void initializeViews(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_field, this, true);
 
-        holes[0] = (SquareButton) findViewById(R.id.hole1);
-        holes[1] = (SquareButton) findViewById(R.id.hole2);
-        holes[2] = (SquareButton) findViewById(R.id.hole3);
-        holes[3] = (SquareButton) findViewById(R.id.hole4);
-        holes[4] = (SquareButton) findViewById(R.id.hole5);
-        holes[5] = (SquareButton) findViewById(R.id.hole6);
-        holes[6] = (SquareButton) findViewById(R.id.hole7);
-        holes[7] = (SquareButton) findViewById(R.id.hole8);
-        holes[8] = (SquareButton) findViewById(R.id.hole9);
+        circles[0] = (SquareButton) findViewById(R.id.hole1);
+        circles[1] = (SquareButton) findViewById(R.id.hole2);
+        circles[2] = (SquareButton) findViewById(R.id.hole3);
+        circles[3] = (SquareButton) findViewById(R.id.hole4);
+        circles[4] = (SquareButton) findViewById(R.id.hole5);
+        circles[5] = (SquareButton) findViewById(R.id.hole6);
+        circles[6] = (SquareButton) findViewById(R.id.hole7);
+        circles[7] = (SquareButton) findViewById(R.id.hole8);
+        circles[8] = (SquareButton) findViewById(R.id.hole9);
 
     }
 
@@ -69,8 +68,8 @@ class Field extends LinearLayout {
 
     public void startGame() {
         resetScore();
-        resetField();
-        for (SquareButton squareButton : holes) {
+        resetCircles();
+        for (SquareButton squareButton : circles) {
             squareButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -89,23 +88,23 @@ class Field extends LinearLayout {
         mole.startHopping();
     }
 
-    public int getCurrentHole() {
-        return currentHole;
+    public int getCurrentCircle() {
+        return currentCircle;
     }
 
-    private void resetField() {
-        for (SquareButton squareButton : holes) {
+    private void resetCircles() {
+        for (SquareButton squareButton : circles) {
             squareButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.hole_inactive));
             squareButton.setTag(ACTIVE_TAG_KEY, false);
         }
     }
 
-    public void setActive(int hole) {
+    public void setActive(int index) {
         mainHandler.post(() -> {
-            resetField();
-            holes[hole].setBackground(ContextCompat.getDrawable(getContext(), R.drawable.hole_active));
-            holes[hole].setTag(ACTIVE_TAG_KEY, true);
-            currentHole = hole;
+            resetCircles();
+            circles[index].setBackground(ContextCompat.getDrawable(getContext(), R.drawable.hole_active));
+            circles[index].setTag(ACTIVE_TAG_KEY, true);
+            currentCircle = index;
         });
     }
 

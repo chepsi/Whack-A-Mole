@@ -1,7 +1,5 @@
 package com.kokonetworks.theapp;
 
-import android.util.Log;
-
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,8 +49,8 @@ class Mole {
     }
 
     private int nextHole(){
-        int hole = new Random().nextInt(field.totalHoles()-1);
-        if(hole == field.getCurrentHole()){
+        int hole = new Random().nextInt(field.totalCircles()-1);
+        if(hole == field.getCurrentCircle()){
             return nextHole();
         }
         return hole;
