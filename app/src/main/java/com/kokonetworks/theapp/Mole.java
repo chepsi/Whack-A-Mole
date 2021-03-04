@@ -26,7 +26,7 @@ class Mole {
         startTimeForLevel = System.currentTimeMillis();
 
         future = scheduledExecutorService.scheduleAtFixedRate(() -> {
-            field.setActive(nextHole());
+            field.setActive(nextHole(), falseHole());
 
             if(System.currentTimeMillis()-startTimeForLevel >= LEVEL_DURATION_MS && getCurrentLevel() < LEVELS.length){
                 nextLevel();
@@ -46,6 +46,14 @@ class Mole {
 
     public int getCurrentLevel(){
         return currentLevel+1;
+    }
+
+    private int falseHole(){
+        int hole = new Random().nextInt(field.totalCircles()-1);
+        if(hole == field.getCurrentCircle()){
+            return nextHole();
+        }
+        return hole;
     }
 
     private int nextHole(){
