@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -13,20 +15,38 @@ public class MainActivity extends AppCompatActivity {
     private Field field;
     private TextView tvLevel;
     private TextView tvScore;
+    private RecyclerView highScoreRV;
+    private HighScoreAdapter highScoreAdapter;
 
     private Button btnStart;
+    private MainActivityViewModel mainActivityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
         field = findViewById(R.id.field);
         tvLevel = findViewById(R.id.tvLevel);
         btnStart = findViewById(R.id.btnStart);
         tvScore = findViewById(R.id.tvScore);
+        highScoreRV = findViewById(R.id.rvHighScore);
 
+        initAdapter();
         setEventListeners();
+        attachObservers();
+
+    }
+
+    void initAdapter(){
+        highScoreAdapter = new HighScoreAdapter();
+        highScoreRV.setAdapter(highScoreAdapter);
+    }
+
+    void attachObservers(){
+        mainActivityViewModel.getHighScores().observe(this, highScores ->{
+            highScoreAdapter.setHighScores(highScores);
+        });
     }
 
     void setEventListeners(){
@@ -37,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         field.setListener(listener);
+
+
     }
 
     private final Field.Listener listener = new Field.Listener() {
@@ -46,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             btnStart.setVisibility(View.VISIBLE);
             tvScore.setVisibility(View.VISIBLE);
             tvScore.setText(String.format(getString(R.string.your_score), score));
+            mainActivityViewModel.setHighScore(score);
         }
 
         @Override
